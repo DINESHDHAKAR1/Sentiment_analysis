@@ -1,0 +1,12 @@
+tweet_sentiment_analysis/
+├── logs/
+├── src/
+│   ├── __init__.py
+│   ├── data_ingestion.py
+│   ├── data_preprocessing.py
+│   ├── model_training.py
+│   ├── model_evaluation.py
+│   ├── pipeline.py
+├── main.py
+├── requirements.txt
+├── tweets.csv  # Your input data file
