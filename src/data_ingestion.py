@@ -20,6 +20,8 @@ class DataIngestion:
             if 'tweet' not in data.columns or 'sentiment' not in data.columns:
                 raise ValueError("CSV must contain 'tweet' and 'sentiment' columns")
             self.logger.info(f"Successfully loaded data from {self.data_path}")
+            freq=data['sentiment'].value_counts()
+            self.logger.info(f"frequency of classes:{freq}")
             return data
         except Exception as e:
             self.logger.error(f"Failed to load data: {str(e)}")

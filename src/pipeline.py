@@ -40,12 +40,12 @@ class SentimentAnalysisPipeline:
                 hidden_dim=256,
                 output_dim=3,
                 n_layers=2,
-                dropout=0.5,
+                dropout=0.1,
                 log_dir="logs"
             )
             self.model_trainer.train(train_data, self.preprocessor)
             self.model_trainer.save_model(self.model_path)
-            self.logger.info("Model training completed and saved")
+            self.logger.info(f"Model training completed and saved to:{self.model_path}")
 
             # Evaluate model
             self.model_evaluator = ModelEvaluator(self.model_trainer.model, self.preprocessor)
@@ -56,21 +56,30 @@ class SentimentAnalysisPipeline:
             self.logger.error(f"Pipeline execution failed: {str(e)}")
             raise
 
-    def predict(self, texts):
+    def predict(self, texts, model_path="/home/dinesh/Documents/GitHub/Sentiment_analysis/sentiment_model.pth"):
         try:
             if isinstance(texts, str):
                 texts = [texts]
+
             processed_texts = [self.preprocessor.clean_text(text) for text in texts]
             indices = [self.preprocessor.text_to_indices(text) for text in processed_texts]
             inputs = torch.tensor(indices, dtype=torch.long).to(self.model_trainer.device)
+
+            
+            self.model_trainer.model.load_state_dict(torch.load(model_path, map_location=self.model_trainer.device))
             self.model_trainer.model.eval()
+
             with torch.no_grad():
                 outputs = self.model_trainer.model(inputs)
                 _, predictions = torch.max(outputs, dim=1)
+
+            
             label_map = {0: "positive", 1: "neutral", 2: "negative"}
             predictions = [label_map[pred.item()] for pred in predictions]
+
             self.logger.info(f"Predictions made for {len(texts)} texts")
             return predictions
+
         except Exception as e:
             self.logger.error(f"Prediction failed: {str(e)}")
             raise

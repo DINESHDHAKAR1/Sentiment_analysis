@@ -35,7 +35,7 @@ class TweetSentimentClassifier(nn.Module):
         return output
 
 class ModelTrainer:
-    def __init__(self, vocab_size, embedding_dim=100, hidden_dim=256, output_dim=3, n_layers=2, dropout=0.5, log_dir="logs"):
+    def __init__(self, vocab_size, embedding_dim=100, hidden_dim=256, output_dim=3, n_layers=2, dropout=0.1, log_dir="logs"):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = TweetSentimentClassifier(vocab_size, embedding_dim, hidden_dim, output_dim, n_layers, dropout).to(self.device)
         self.criterion = nn.CrossEntropyLoss()
@@ -50,7 +50,7 @@ class ModelTrainer:
         )
         self.logger.info(f"Device: {self.device}")
 
-    def train(self, train_data, preprocessor, batch_size=32, epochs=10):
+    def train(self, train_data, preprocessor, batch_size=32, epochs=3):
         try:
             dataset = TweetSentimentDataset(train_data["tweet"].values, train_data["sentiment"].values, preprocessor)
             data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)

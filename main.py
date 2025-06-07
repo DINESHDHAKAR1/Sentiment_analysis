@@ -15,7 +15,8 @@ if __name__ == "__main__":
         "I love this product! It's amazing!",
         "This is the worst experience ever",
         "I like this thing",
-        "never ever going to visit this place "
+        "never ever going to visit this place ",
+        "The event starts at 5 PM."
     ]
     predictions = pipeline.predict(sample_tweets)
     print("Sample Predictions:", predictions)
